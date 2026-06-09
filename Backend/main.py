@@ -160,6 +160,12 @@ async def compress_simulate(file: UploadFile = File(...), quality: int = Form(50
     res = ip.simulate_jpeg(img, quality)
     return StreamingResponse(encode_image(res), media_type="image/jpeg")
 
+@app.post("/api/compress/quantize")
+async def compress_quantize(file: UploadFile = File(...), levels: int = Form(8)):
+    img = decode_image(await file.read())
+    res = ip.simulate_quantization(img, levels)
+    return StreamingResponse(encode_image(res), media_type="image/jpeg")
+
 # 9. Histogram Analysis
 @app.post("/api/histogram")
 async def histogram_analysis(file: UploadFile = File(...)):

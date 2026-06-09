@@ -25,7 +25,8 @@
       "color": "Warna",
       "filters": "Filter",
       "restore": "Pemulihan",
-      "segment": "Segmentasi"
+      "segment": "Segmentasi",
+      "compress": "Kompresi"
     },
     "desc": {
       "adjust": "Kecerahan, kontras & buram",
@@ -33,7 +34,8 @@
       "color": "Kanal dan pengaturan rona",
       "filters": "Tepi dan morfologi",
       "restore": "Penghilang derau dan perbaikan",
-      "segment": "Klasterisasi dan deteksi (ML)"
+      "segment": "Klasterisasi dan deteksi (ML)",
+      "compress": "Kuantisasi dan JPEG lossy"
     },
     "empty": {
       "title": "Siap Beraksi",
@@ -107,6 +109,14 @@
       "otherMethods": "Metode Lainnya",
       "edgeBased": "Tepi (Edge-Based)",
       "detectCnn": "Deteksi Objek CNN"
+    },
+    "compress": {
+      "jpegSim": "Simulasi JPEG",
+      "quality": "Kualitas",
+      "applyJpeg": "Terapkan JPEG",
+      "quantization": "Kuantisasi Warna",
+      "levels": "Level",
+      "applyQuant": "Terapkan Kuantisasi"
     }
   }
 }

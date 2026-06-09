@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Upload, Download, Undo2, RotateCcw, AlertTriangle, Moon, Sun, 
-  SplitSquareHorizontal, Image as ImageIcon, BarChart, SlidersHorizontal, Move, Palette, Wand2, RefreshCw, Layers, Globe
+  SplitSquareHorizontal, Image as ImageIcon, BarChart, SlidersHorizontal, Move, Palette, Wand2, RefreshCw, Layers, Globe, Archive
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -171,6 +171,7 @@ export default function App() {
     { id: 'filters', icon: Wand2, label: t('sidebar.categories.filters') },
     { id: 'restore', icon: RefreshCw, label: t('sidebar.categories.restore') },
     { id: 'segment', icon: Layers, label: t('sidebar.categories.segment') },
+    { id: 'compress', icon: Archive, label: t('sidebar.categories.compress') },
   ] as const;
 
   return (

@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { useTranslation } from 'react-i18next';
 
-export type ToolCategory = 'adjust' | 'geometry' | 'color' | 'filters' | 'restore' | 'segment' | null;
+export type ToolCategory = 'adjust' | 'geometry' | 'color' | 'filters' | 'restore' | 'segment' | 'compress' | null;
 
 interface SidebarProps {
   activeCategory: ToolCategory;
@@ -46,6 +46,10 @@ export default function Sidebar({ activeCategory, onApplyTool, isProcessing, dis
   // Segmentation
   const [kMeansValue, setKMeansValue] = useState(4);
 
+  // Compression
+  const [jpegQuality, setJpegQuality] = useState(50);
+  const [quantLevels, setQuantLevels] = useState(8);
+
   const handleApply = (endpoint: string, params: Record<string, string|number> = {}) => {
     if (disabled || isProcessing) return;
     onApplyTool(endpoint, params);
@@ -71,6 +75,7 @@ export default function Sidebar({ activeCategory, onApplyTool, isProcessing, dis
   if (activeCategory === 'filters') { title = t('sidebar.categories.filters'); description = t('sidebar.desc.filters'); }
   if (activeCategory === 'restore') { title = t('sidebar.categories.restore'); description = t('sidebar.desc.restore'); }
   if (activeCategory === 'segment') { title = t('sidebar.categories.segment'); description = t('sidebar.desc.segment'); }
+  if (activeCategory === 'compress') { title = t('sidebar.categories.compress'); description = t('sidebar.desc.compress'); }
 
   return (
     <div className="w-[300px] flex-shrink-0 border-l bg-card flex flex-col h-full shadow-sm z-10">
@@ -316,6 +321,32 @@ export default function Sidebar({ activeCategory, onApplyTool, isProcessing, dis
                 <Button variant="default" size="sm" className="w-full justify-start font-medium" onClick={() => handleApply('/api/ml/detect-objects')}>
                   {t('sidebar.segment.detectCnn')}
                 </Button>
+              </div>
+            </>
+          )}
+
+          {activeCategory === 'compress' && (
+            <>
+              <div className="space-y-4">
+                <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t('sidebar.compress.jpegSim')}</Label>
+                <div className="flex justify-between items-center text-xs mt-1">
+                  <span className="text-xs text-muted-foreground">{t('sidebar.compress.quality')}</span>
+                  <span className="font-mono text-muted-foreground">{jpegQuality}%</span>
+                </div>
+                <Slider min={1} max={100} step={1} value={[jpegQuality]} onValueChange={(v) => setJpegQuality(v[0])} disabled={disabled} />
+                <Button variant="secondary" size="sm" className="w-full" onClick={() => handleApply('/api/compress/simulate', { quality: jpegQuality })}>{t('sidebar.compress.applyJpeg')}</Button>
+              </div>
+
+              <Separator />
+              
+              <div className="space-y-4">
+                <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t('sidebar.compress.quantization')}</Label>
+                <div className="flex justify-between items-center text-xs mt-1">
+                  <span className="text-xs text-muted-foreground">{t('sidebar.compress.levels')}</span>
+                  <span className="font-mono text-muted-foreground">{quantLevels}</span>
+                </div>
+                <Slider min={2} max={64} step={2} value={[quantLevels]} onValueChange={(v) => setQuantLevels(v[0])} disabled={disabled} />
+                <Button variant="secondary" size="sm" className="w-full" onClick={() => handleApply('/api/compress/quantize', { levels: quantLevels })}>{t('sidebar.compress.applyQuant')}</Button>
               </div>
             </>
           )}

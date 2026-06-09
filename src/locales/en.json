@@ -25,7 +25,8 @@
       "color": "Color",
       "filters": "Filters",
       "restore": "Restore",
-      "segment": "Segmentation"
+      "segment": "Segmentation",
+      "compress": "Compression"
     },
     "desc": {
       "adjust": "Brightness, contrast & blur",
@@ -33,7 +34,8 @@
       "color": "Channel and hue settings",
       "filters": "Edges and morphology",
       "restore": "Denoise and repair",
-      "segment": "Clustering and detection (ML)"
+      "segment": "Clustering and detection (ML)",
+      "compress": "Quantization and JPEG lossy"
     },
     "empty": {
       "title": "Ready to Roll",
@@ -107,6 +109,14 @@
       "otherMethods": "Other Methods",
       "edgeBased": "Edge-Based",
       "detectCnn": "CNN Object Detection"
+    },
+    "compress": {
+      "jpegSim": "JPEG Simulation",
+      "quality": "Quality",
+      "applyJpeg": "Apply JPEG",
+      "quantization": "Color Quantization",
+      "levels": "Levels",
+      "applyQuant": "Apply Quantization"
     }
   }
 }
