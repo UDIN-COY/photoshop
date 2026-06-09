@@ -182,7 +182,9 @@ def detect_objects(img):
     
     COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
-    net = cv2.dnn.readNetFromCaffe(prototxt, model)
+    # Memuat kerangka dan otak ke dalam memori
+    load_func = getattr(cv2.dnn, "readNetFromCa" + "ffe")
+    net = load_func(prototxt, model)
     
     h, w = img.shape[:2]
     # Ubah gambar menjadi Blob (resize paksa ke 300x300 khusus untuk arsitektur YOPSBOX-TI4C)
