@@ -35,7 +35,7 @@ def build_yops_model(num_classes=20):
     predictions = Dense(num_classes + 1, activation='softmax')(x)
     
     # 4. Satukan kerangka menjadi satu model utuh
-    model = Model(inputs=base_model.input, outputs=predictions, name="YOPSBOX-TI4C")
+    model = Model(inputs=inputs, outputs=predictions, name="YOPSBOX-TI4C")
     return model
 
 def train_model():

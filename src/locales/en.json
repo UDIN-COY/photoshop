@@ -108,7 +108,8 @@
       "applyKmeans": "Apply K-Means",
       "otherMethods": "Other Methods",
       "edgeBased": "Edge-Based",
-      "detectCnn": "CNN Object Detection"
+      "detectCnn": "CNN Object Detection",
+      "classifyCnn": "CNN Image Classification"
     },
     "compress": {
       "jpegSim": "JPEG Simulation",

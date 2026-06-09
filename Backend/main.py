@@ -67,8 +67,11 @@ async def geom_rotate(file: UploadFile = File(...), angle: float = Form(0)):
 
 @app.post("/api/geom/flip")
 async def geom_flip(file: UploadFile = File(...), mode: int = Form(1)): # 1 horizontal, 0 vertical, -1 both
+    print(f"--- geom_flip API called with mode={mode} ---")
     img = decode_image(await file.read())
+    print(f"Original image shape: {img.shape}")
     res = ip.apply_flip(img, mode)
+    print(f"Flipped image shape: {res.shape}")
     return StreamingResponse(encode_image(res), media_type="image/jpeg")
 
 @app.post("/api/geom/crop")
@@ -179,6 +182,15 @@ async def ml_detect(file: UploadFile = File(...)):
     img = decode_image(await file.read())
     try:
         res = ip.detect_objects(img)
+        return StreamingResponse(encode_image(res), media_type="image/jpeg")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/ml/classify-image")
+async def ml_classify(file: UploadFile = File(...)):
+    img = decode_image(await file.read())
+    try:
+        res = ip.classify_image(img)
         return StreamingResponse(encode_image(res), media_type="image/jpeg")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -108,7 +108,8 @@
       "applyKmeans": "Terapkan K-Means",
       "otherMethods": "Metode Lainnya",
       "edgeBased": "Tepi (Edge-Based)",
-      "detectCnn": "Deteksi Objek CNN"
+      "detectCnn": "Deteksi Objek CNN",
+      "classifyCnn": "Klasifikasi Citra CNN"
     },
     "compress": {
       "jpegSim": "Simulasi JPEG",

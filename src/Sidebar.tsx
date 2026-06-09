@@ -321,6 +321,9 @@ export default function Sidebar({ activeCategory, onApplyTool, isProcessing, dis
                 <Button variant="default" size="sm" className="w-full justify-start font-medium" onClick={() => handleApply('/api/ml/detect-objects')}>
                   {t('sidebar.segment.detectCnn')}
                 </Button>
+                <Button variant="default" size="sm" className="w-full justify-start font-medium bg-indigo-600 hover:bg-indigo-700 text-white border-0" onClick={() => handleApply('/api/ml/classify-image')}>
+                  {t('sidebar.segment.classifyCnn')}
+                </Button>
               </div>
             </>
           )}

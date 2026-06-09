@@ -4,8 +4,18 @@ import os
 import tensorflow as tf
 
 try:
-    cnn_model = tf.keras.models.load_model("models/YOPS-100.TI4C")
-except:
+    core_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_dir = os.path.dirname(core_dir)
+    model_path = os.path.join(backend_dir, "models", "YOPS-100.TI4C")
+    symlink_path = os.path.join(backend_dir, "models", "YOPS-100.h5")
+    
+    if not os.path.exists(symlink_path):
+        os.symlink(model_path, symlink_path)
+    cnn_model = tf.keras.models.load_model(symlink_path)
+    if os.path.exists(symlink_path):
+        os.unlink(symlink_path)
+except Exception as e:
+    print("Error loading cnn_model:", e)
     cnn_model = None
 
 # 1 & 2. Peningkatan Citra (Enhancement)
@@ -242,4 +252,326 @@ def detect_objects(img):
             # Tulis label di atas background hitam
             cv2.putText(res_img, label, (x, ty), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
             
+    return res_img
+
+# CIFAR-100 Classes list and dictionary
+CIFAR100_CLASSES = {
+    "aquatic mammals": ["beaver", "dolphin", "otter", "seal", "whale"],
+    "fish": ["aquarium fish", "flatfish", "ray", "shark", "trout"],
+    "flowers": ["orchids", "poppies", "roses", "sunflowers", "tulips"],
+    "food containers": ["bottles", "bowls", "cans", "cups", "plates"],
+    "fruit and vegetables": ["apples", "mushrooms", "oranges", "pears", "sweet peppers"],
+    "household electrical devices": ["clock", "computer keyboard", "lamp", "telephone", "television"],
+    "household furniture": ["bed", "chair", "couch", "table", "wardrobe"],
+    "insects": ["bee", "beetle", "butterfly", "caterpillar", "cockroach"],
+    "large carnivores": ["bear", "leopard", "lion", "tiger", "wolf"],
+    "large man-made outdoor things": ["bridge", "castle", "house", "road", "skyscraper"],
+    "large natural outdoor scenes": ["cloud", "forest", "mountain", "plain", "sea"],
+    "large omnivores and herbivores": ["camel", "cattle", "chimpanzee", "elephant", "kangaroo"],
+    "medium-sized mammals": ["fox", "porcupine", "possum", "raccoon", "skunk"],
+    "non-insect invertebrates": ["crab", "lobster", "snail", "spider", "worm"],
+    "people": ["baby", "boy", "girl", "man", "woman"],
+    "reptiles": ["crocodile", "dinosaur", "lizard", "snake", "turtle"],
+    "small mammals": ["hamster", "mouse", "rabbit", "shrew", "squirrel"],
+    "trees": ["maple", "oak", "palm", "pine", "willow"],
+    "vehicles 1": ["bicycle", "bus", "motorcycle", "pickup truck", "train"],
+    "vehicles 2": ["lawn-mower", "rocket", "streetcar", "tank", "tractor"]
+}
+
+def map_imagenet_to_cifar100(imagenet_name: str):
+    name = imagenet_name.lower().replace("_", " ")
+    
+    # 1. Direct substring check
+    for superclass, classes in CIFAR100_CLASSES.items():
+        for c in classes:
+            if c in name or name in c:
+                return superclass, c
+                
+    # 2. Synonym mapping for common ImageNet classes
+    synonyms = {
+        "locomotive": ("vehicles 1", "train"),
+        "bullet train": ("vehicles 1", "train"),
+        "subway": ("vehicles 1", "train"),
+        "passenger car": ("vehicles 1", "train"),
+        "cab": ("vehicles 1", "pickup truck"),
+        "car": ("vehicles 1", "pickup truck"),
+        "truck": ("vehicles 1", "pickup truck"),
+        "ambulance": ("vehicles 1", "bus"),
+        "trolleybus": ("vehicles 2", "streetcar"),
+        "streetcar": ("vehicles 2", "streetcar"),
+        "moped": ("vehicles 1", "motorcycle"),
+        "vespa": ("vehicles 1", "motorcycle"),
+        "tricycle": ("vehicles 1", "bicycle"),
+        "fire engine": ("vehicles 1", "bus"),
+        "trailer": ("vehicles 2", "tractor"),
+        "dog": ("medium-sized mammals", "fox"),
+        "puppy": ("medium-sized mammals", "fox"),
+        "cat": ("medium-sized mammals", "raccoon"),
+        "kitten": ("medium-sized mammals", "raccoon"),
+        "lion": ("large carnivores", "lion"),
+        "tiger": ("large carnivores", "tiger"),
+        "leopard": ("large carnivores", "leopard"),
+        "cheetah": ("large carnivores", "leopard"),
+        "puma": ("large carnivores", "leopard"),
+        "jaguar": ("large carnivores", "leopard"),
+        "panther": ("large carnivores", "leopard"),
+        "wolf": ("large carnivores", "wolf"),
+        "bear": ("large carnivores", "bear"),
+        "fox": ("medium-sized mammals", "fox"),
+        "coyote": ("large carnivores", "wolf"),
+        "jackal": ("large carnivores", "wolf"),
+        "hyena": ("large carnivores", "wolf"),
+        "squirrel": ("small mammals", "squirrel"),
+        "hamster": ("small mammals", "hamster"),
+        "guinea pig": ("small mammals", "hamster"),
+        "mouse": ("small mammals", "mouse"),
+        "rat": ("small mammals", "mouse"),
+        "rabbit": ("small mammals", "rabbit"),
+        "hare": ("small mammals", "rabbit"),
+        "camel": ("large omnivores and herbivores", "camel"),
+        "dromedary": ("large omnivores and herbivores", "camel"),
+        "llama": ("large omnivores and herbivores", "camel"),
+        "alpaca": ("large omnivores and herbivores", "camel"),
+        "elephant": ("large omnivores and herbivores", "elephant"),
+        "kangaroo": ("large omnivores and herbivores", "kangaroo"),
+        "wallaby": ("large omnivores and herbivores", "kangaroo"),
+        "chimpanzee": ("large omnivores and herbivores", "chimpanzee"),
+        "monkey": ("large omnivores and herbivores", "chimpanzee"),
+        "gorilla": ("large omnivores and herbivores", "chimpanzee"),
+        "baboon": ("large omnivores and herbivores", "chimpanzee"),
+        "orangutan": ("large omnivores and herbivores", "chimpanzee"),
+        "cow": ("large omnivores and herbivores", "cattle"),
+        "bull": ("large omnivores and herbivores", "cattle"),
+        "ox": ("large omnivores and herbivores", "cattle"),
+        "sheep": ("large omnivores and herbivores", "cattle"),
+        "ram": ("large omnivores and herbivores", "cattle"),
+        "ewe": ("large omnivores and herbivores", "cattle"),
+        "lamb": ("large omnivores and herbivores", "cattle"),
+        "goat": ("large omnivores and herbivores", "cattle"),
+        "pig": ("large omnivores and herbivores", "cattle"),
+        "hog": ("large omnivores and herbivores", "cattle"),
+        "horse": ("large omnivores and herbivores", "cattle"),
+        "colt": ("large omnivores and herbivores", "cattle"),
+        "stallion": ("large omnivores and herbivores", "cattle"),
+        "zebra": ("large omnivores and herbivores", "cattle"),
+        "sea lion": ("aquatic mammals", "seal"),
+        "walrus": ("aquatic mammals", "seal"),
+        "dugong": ("aquatic mammals", "seal"),
+        "manatee": ("aquatic mammals", "seal"),
+        "whale": ("aquatic mammals", "whale"),
+        "dolphin": ("aquatic mammals", "dolphin"),
+        "porpoise": ("aquatic mammals", "dolphin"),
+        "otter": ("aquatic mammals", "otter"),
+        "beaver": ("aquatic mammals", "beaver"),
+        "shark": ("fish", "shark"),
+        "stingray": ("fish", "ray"),
+        "electric ray": ("fish", "ray"),
+        "trout": ("fish", "trout"),
+        "salmon": ("fish", "trout"),
+        "goldfish": ("fish", "aquarium fish"),
+        "clownfish": ("fish", "aquarium fish"),
+        "crab": ("non-insect invertebrates", "crab"),
+        "hermit crab": ("non-insect invertebrates", "crab"),
+        "lobster": ("non-insect invertebrates", "lobster"),
+        "crayfish": ("non-insect invertebrates", "lobster"),
+        "snail": ("non-insect invertebrates", "snail"),
+        "slug": ("non-insect invertebrates", "snail"),
+        "spider": ("non-insect invertebrates", "spider"),
+        "tarantula": ("non-insect invertebrates", "spider"),
+        "scorpion": ("non-insect invertebrates", "spider"),
+        "centipede": ("non-insect invertebrates", "worm"),
+        "earthworm": ("non-insect invertebrates", "worm"),
+        "nematode": ("non-insect invertebrates", "worm"),
+        "bee": ("insects", "bee"),
+        "wasp": ("insects", "bee"),
+        "hornet": ("insects", "bee"),
+        "beetle": ("insects", "beetle"),
+        "ladybug": ("insects", "beetle"),
+        "weevil": ("insects", "beetle"),
+        "butterfly": ("insects", "butterfly"),
+        "moth": ("insects", "butterfly"),
+        "caterpillar": ("insects", "caterpillar"),
+        "silkworm": ("insects", "caterpillar"),
+        "cockroach": ("insects", "cockroach"),
+        "roach": ("insects", "cockroach"),
+        "cricket": ("insects", "cockroach"),
+        "grasshopper": ("insects", "cockroach"),
+        "locust": ("insects", "cockroach"),
+        "ant": ("insects", "beetle"),
+        "groom": ("people", "man"),
+        "bride": ("people", "woman"),
+        "doctor": ("people", "man"),
+        "scuba diver": ("people", "man"),
+        "infant": ("people", "baby"),
+        "toddler": ("people", "baby"),
+        "bed": ("household furniture", "bed"),
+        "crib": ("household furniture", "bed"),
+        "cradle": ("household furniture", "bed"),
+        "chair": ("household furniture", "chair"),
+        "stool": ("household furniture", "chair"),
+        "sofa": ("household furniture", "couch"),
+        "couch": ("household furniture", "couch"),
+        "table": ("household furniture", "table"),
+        "desk": ("household furniture", "table"),
+        "wardrobe": ("household furniture", "wardrobe"),
+        "closet": ("household furniture", "wardrobe"),
+        "cabinet": ("household furniture", "wardrobe"),
+        "clock": ("household electrical devices", "clock"),
+        "watch": ("household electrical devices", "clock"),
+        "keyboard": ("household electrical devices", "computer keyboard"),
+        "lamp": ("household electrical devices", "lamp"),
+        "lantern": ("household electrical devices", "lamp"),
+        "candle": ("household electrical devices", "lamp"),
+        "telephone": ("household electrical devices", "telephone"),
+        "cellular": ("household electrical devices", "telephone"),
+        "mobile phone": ("household electrical devices", "telephone"),
+        "television": ("household electrical devices", "television"),
+        "monitor": ("household electrical devices", "television"),
+        "screen": ("household electrical devices", "television"),
+        "bottle": ("food containers", "bottles"),
+        "flask": ("food containers", "bottles"),
+        "wine bottle": ("food containers", "bottles"),
+        "bowl": ("food containers", "bowls"),
+        "basin": ("food containers", "bowls"),
+        "can": ("food containers", "cans"),
+        "tin": ("food containers", "cans"),
+        "cup": ("food containers", "cups"),
+        "mug": ("food containers", "cups"),
+        "goblet": ("food containers", "cups"),
+        "plate": ("food containers", "plates"),
+        "dish": ("food containers", "plates"),
+        "platter": ("food containers", "plates"),
+        "apple": ("fruit and vegetables", "apples"),
+        "mushroom": ("fruit and vegetables", "mushrooms"),
+        "fungus": ("fruit and vegetables", "mushrooms"),
+        "orange": ("fruit and vegetables", "oranges"),
+        "lemon": ("fruit and vegetables", "oranges"),
+        "lime": ("fruit and vegetables", "oranges"),
+        "grapefruit": ("fruit and vegetables", "oranges"),
+        "pear": ("fruit and vegetables", "pears"),
+        "banana": ("fruit and vegetables", "pears"),
+        "bell pepper": ("fruit and vegetables", "sweet peppers"),
+        "chili": ("fruit and vegetables", "sweet peppers"),
+        "pepper": ("fruit and vegetables", "sweet peppers"),
+        "bridge": ("large man-made outdoor things", "bridge"),
+        "viaduct": ("large man-made outdoor things", "bridge"),
+        "castle": ("large man-made outdoor things", "castle"),
+        "monastery": ("large man-made outdoor things", "castle"),
+        "palace": ("large man-made outdoor things", "castle"),
+        "house": ("large man-made outdoor things", "house"),
+        "home": ("large man-made outdoor things", "house"),
+        "cabin": ("large man-made outdoor things", "house"),
+        "building": ("large man-made outdoor things", "skyscraper"),
+        "skyscraper": ("large man-made outdoor things", "skyscraper"),
+        "road": ("large man-made outdoor things", "road"),
+        "street": ("large man-made outdoor things", "road"),
+        "highway": ("large man-made outdoor things", "road"),
+        "forest": ("large natural outdoor scenes", "forest"),
+        "woods": ("large natural outdoor scenes", "forest"),
+        "mountain": ("large natural outdoor scenes", "mountain"),
+        "alp": ("large natural outdoor scenes", "mountain"),
+        "hill": ("large natural outdoor scenes", "mountain"),
+        "sea": ("large natural outdoor scenes", "sea"),
+        "ocean": ("large natural outdoor scenes", "sea"),
+        "lake": ("large natural outdoor scenes", "sea"),
+        "river": ("large natural outdoor scenes", "sea"),
+        "cloud": ("large natural outdoor scenes", "cloud"),
+        "sky": ("large natural outdoor scenes", "cloud"),
+        "valley": ("large natural outdoor scenes", "plain"),
+        "plain": ("large natural outdoor scenes", "plain"),
+        "field": ("large natural outdoor scenes", "plain"),
+        "orchid": ("flowers", "orchids"),
+        "poppy": ("flowers", "poppies"),
+        "rose": ("flowers", "roses"),
+        "sunflower": ("flowers", "sunflowers"),
+        "tulip": ("flowers", "tulips"),
+        "daisy": ("flowers", "sunflowers"),
+        "maple": ("trees", "maple"),
+        "oak": ("trees", "oak"),
+        "palm": ("trees", "palm"),
+        "pine": ("trees", "pine"),
+        "willow": ("trees", "willow"),
+        "crocodile": ("reptiles", "crocodile"),
+        "alligator": ("reptiles", "crocodile"),
+        "dinosaur": ("reptiles", "dinosaur"),
+        "lizard": ("reptiles", "lizard"),
+        "chameleon": ("reptiles", "lizard"),
+        "gecko": ("reptiles", "lizard"),
+        "snake": ("reptiles", "snake"),
+        "cobra": ("reptiles", "snake"),
+        "python": ("reptiles", "snake"),
+        "viper": ("reptiles", "snake"),
+        "turtle": ("reptiles", "turtle"),
+        "tortoise": ("reptiles", "turtle"),
+        "terrapin": ("reptiles", "turtle"),
+    }
+    
+    # Try synonym lookup
+    for word, mapped in synonyms.items():
+        if word in name:
+            return mapped
+            
+    # Default fallback
+    return "large natural outdoor scenes", "cloud"
+
+def classify_image(img: np.ndarray) -> np.ndarray:
+    global cnn_model
+    if cnn_model is None:
+        try:
+            core_dir = os.path.dirname(os.path.abspath(__file__))
+            backend_dir = os.path.dirname(core_dir)
+            model_path = os.path.join(backend_dir, "models", "YOPS-100.TI4C")
+            symlink_path = os.path.join(backend_dir, "models", "YOPS-100.h5")
+            
+            if not os.path.exists(symlink_path):
+                os.symlink(model_path, symlink_path)
+            cnn_model = tf.keras.models.load_model(symlink_path)
+            if os.path.exists(symlink_path):
+                os.unlink(symlink_path)
+        except Exception as e:
+            raise Exception(f"Model klasifikasi YOPS-100.TI4C tidak dapat dimuat: {str(e)}")
+            
+    if cnn_model is None:
+        raise Exception("Model klasifikasi YOPS-100.TI4C tidak ditemukan.")
+
+    # Convert BGR to RGB for Keras ResNet50 input
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img_resized = cv2.resize(img_rgb, (224, 224))
+    x = np.expand_dims(img_resized, axis=0)
+    
+    from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
+    x = preprocess_input(x)
+    
+    preds = cnn_model.predict(x)
+    decoded = decode_predictions(preds, top=1)[0][0]
+    imagenet_name = decoded[1]
+    confidence = float(decoded[2])
+    
+    superclass, cifar_class = map_imagenet_to_cifar100(imagenet_name)
+    
+    # Draw premium overlay label card on a copy of the image
+    res_img = img.copy()
+    h, w = res_img.shape[:2]
+    
+    label_text = f"Class: {cifar_class} ({confidence * 100:.1f}%)"
+    sub_text = f"Superclass: {superclass}"
+    
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 0.7
+    thickness = 2
+    
+    (w1, h1), _ = cv2.getTextSize(label_text, font, font_scale, thickness)
+    (w2, h2), _ = cv2.getTextSize(sub_text, font, font_scale, thickness)
+    
+    box_w = max(w1, w2) + 20
+    box_h = h1 + h2 + 25
+    
+    overlay = res_img.copy()
+    cv2.rectangle(overlay, (10, 10), (10 + box_w, 10 + box_h), (0, 0, 0), -1)
+    cv2.addWeighted(overlay, 0.6, res_img, 0.4, 0, res_img)
+    
+    # Draw text with green class color to stand out nicely
+    cv2.putText(res_img, label_text, (20, 10 + h1 + 5), font, font_scale, (0, 255, 0), thickness, cv2.LINE_AA)
+    cv2.putText(res_img, sub_text, (20, 10 + h1 + h2 + 15), font, font_scale, (200, 200, 200), thickness - 1, cv2.LINE_AA)
+    
     return res_img

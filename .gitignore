@@ -6,3 +6,5 @@ coverage/
 *.log
 .env*
 !.env.example
+cifar100_assets/
+docs.md

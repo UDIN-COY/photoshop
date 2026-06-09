@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Upload, Download, Undo2, RotateCcw, AlertTriangle, Moon, Sun, 
+import {
+  Upload, Download, Undo2, RotateCcw, AlertTriangle, Moon, Sun,
   SplitSquareHorizontal, Image as ImageIcon, BarChart, SlidersHorizontal, Move, Palette, Wand2, RefreshCw, Layers, Globe, Archive
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -55,21 +55,21 @@ function LanguageToggle() {
 
 export default function App() {
   const { t } = useTranslation();
-  
+
   const [originalBlob, setOriginalBlob] = useState<Blob | null>(null);
   const [currentBlob, setCurrentBlob] = useState<Blob | null>(null);
-  
+
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  
+
   const [history, setHistory] = useState<Blob[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [viewMode, setViewMode] = useState<string>('single');
   const [activeCategory, setActiveCategory] = useState<ToolCategory>(null);
   const [histogramData, setHistogramData] = useState<number[] | null>(null);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function App() {
       setCurrentBlob(file);
       setHistory([]);
       setError(null);
-      setActiveCategory('adjust'); 
+      setActiveCategory('adjust');
     }
   };
 
@@ -181,69 +181,69 @@ export default function App() {
         <div className="flex items-center gap-3 min-w-[240px]">
           <div className="w-8 h-8 rounded-[8px] bg-primary flex items-center justify-center text-primary-foreground shadow-md">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="m14.31 8 5.74 9.94"/>
-              <path d="M9.69 8h11.48"/>
-              <path d="m7.38 12 5.74-9.94"/>
-              <path d="M9.69 16 3.95 6.06"/>
-              <path d="M14.31 16H2.83"/>
-              <path d="m16.62 12-5.74 9.94"/>
+              <circle cx="12" cy="12" r="10" />
+              <path d="m14.31 8 5.74 9.94" />
+              <path d="M9.69 8h11.48" />
+              <path d="m7.38 12 5.74-9.94" />
+              <path d="M9.69 16 3.95 6.06" />
+              <path d="M14.31 16H2.83" />
+              <path d="m16.62 12-5.74 9.94" />
             </svg>
           </div>
           <span className="font-bold text-xl tracking-tight text-foreground font-heading">YOPS</span>
         </div>
-        
+
         <div className="flex flex-1 items-center justify-center">
-           {currentBlob && (
-             <Tabs value={viewMode} onValueChange={setViewMode} className="w-[300px]">
-                <TabsList className="grid w-full grid-cols-3 h-8">
-                  <TabsTrigger value="single" className="text-xs h-6"><ImageIcon className="w-3 h-3 mr-2" />{t('app.single')}</TabsTrigger>
-                  <TabsTrigger value="split" className="text-xs h-6"><SplitSquareHorizontal className="w-3 h-3 mr-2" />{t('app.split')}</TabsTrigger>
-                  <TabsTrigger value="histogram" className="text-xs h-6" onClick={() => executeAction('histogram')}><BarChart className="w-3 h-3 mr-2" />{t('app.hist')}</TabsTrigger>
-                </TabsList>
-             </Tabs>
-           )}
+          {currentBlob && (
+            <Tabs value={viewMode} onValueChange={setViewMode} className="w-[300px]">
+              <TabsList className="grid w-full grid-cols-3 h-8">
+                <TabsTrigger value="single" className="text-xs h-6"><ImageIcon className="w-3 h-3 mr-2" />{t('app.single')}</TabsTrigger>
+                <TabsTrigger value="split" className="text-xs h-6"><SplitSquareHorizontal className="w-3 h-3 mr-2" />{t('app.split')}</TabsTrigger>
+                <TabsTrigger value="histogram" className="text-xs h-6" onClick={() => executeAction('histogram')}><BarChart className="w-3 h-3 mr-2" />{t('app.hist')}</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          )}
         </div>
 
         <div className="flex items-center gap-1.5 min-w-[240px] justify-end">
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileUpload} 
-            accept="image/*" 
-            className="hidden" 
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            accept="image/*"
+            className="hidden"
           />
           <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="h-8 text-xs font-medium bg-background">
             <Upload className="w-3.5 h-3.5 mr-1.5" /> {t('app.open')}
           </Button>
-          
+
           <div className="w-px h-4 bg-border/60 mx-1.5" />
-          
+
           <TooltipProvider delayDuration={200}>
             <Tooltip>
-              <TooltipTrigger asChild>
+              <TooltipTrigger render={
                 <Button variant="ghost" size="icon" onClick={undo} disabled={history.length === 0 || isProcessing} className="h-8 w-8 rounded-lg">
                   <Undo2 className="w-3.5 h-3.5" />
                 </Button>
-              </TooltipTrigger>
+              } />
               <TooltipContent side="bottom" className="text-xs">{t('app.undo')}</TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger asChild>
+              <TooltipTrigger render={
                 <Button variant="ghost" size="icon" onClick={reset} disabled={!originalBlob || isProcessing} className="h-8 w-8 rounded-lg">
                   <RotateCcw className="w-3.5 h-3.5" />
                 </Button>
-              </TooltipTrigger>
+              } />
               <TooltipContent side="bottom" className="text-xs">{t('app.reset')}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 
           <div className="w-px h-4 bg-border/60 mx-1.5" />
-          
+
           <Button variant="default" size="sm" onClick={download} disabled={!currentBlob || isProcessing} className="h-8 text-xs font-medium rounded-lg shadow-sm">
             <Download className="w-3.5 h-3.5 mr-1.5" /> {t('app.export')}
           </Button>
-          
+
           <div className="ml-1 flex items-center">
             <LanguageToggle />
             <ModeToggle />
@@ -252,7 +252,7 @@ export default function App() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        
+
         {/* Left Toolbar */}
         <div className="w-16 flex-shrink-0 border-r bg-card flex flex-col items-center py-4 gap-3 z-20 shadow-sm">
           <TooltipProvider delayDuration={200}>
@@ -320,7 +320,7 @@ export default function App() {
                   </div>
                 </div>
               )}
-              
+
               {viewMode === 'histogram' ? (
                 <div className="w-full h-full flex flex-col items-center justify-center bg-transparent p-4">
                   <span className="text-[10px] uppercase tracking-widest text-primary mb-6 font-semibold">{t('app.histogramTitle')}</span>
@@ -330,8 +330,8 @@ export default function App() {
                         <RechartsBarChart data={histogramData.map((val, i) => ({ intensity: i, count: val }))}>
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
                           <XAxis dataKey="intensity" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} minTickGap={30} />
-                          <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `${(v/1000).toFixed(1)}k` : v} />
-                          <RechartsTooltip 
+                          <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v} />
+                          <RechartsTooltip
                             contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '12px' }}
                             itemStyle={{ color: 'var(--foreground)' }}
                           />
@@ -347,10 +347,10 @@ export default function App() {
                 </div>
               ) : viewMode === 'single' ? (
                 <div className="relative max-w-full max-h-full flex items-center justify-center bg-transparent drop-shadow-xl">
-                  <img 
-                    src={previewUrl!} 
-                    alt="Canvas" 
-                    className="max-w-full max-h-[calc(100vh-8rem)] object-contain transition-opacity duration-200 shadow-xl ring-1 ring-border/50" 
+                  <img
+                    src={previewUrl!}
+                    alt="Canvas"
+                    className="max-w-full max-h-[calc(100vh-8rem)] object-contain transition-opacity duration-200 shadow-xl ring-1 ring-border/50"
                     style={{ opacity: isProcessing ? 0.3 : 1 }}
                   />
                 </div>
@@ -359,20 +359,20 @@ export default function App() {
                   <div className="flex-1 flex flex-col items-center justify-center w-full h-full min-h-0">
                     <span className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-semibold">{t('app.original')}</span>
                     <div className="relative flex items-center justify-center flex-1 w-full drop-shadow-lg">
-                      <img 
-                        src={originalUrl!} 
-                        alt="Original" 
-                        className="max-w-full max-h-[calc(100vh-10rem)] object-contain ring-1 ring-border/50 shadow-xl" 
+                      <img
+                        src={originalUrl!}
+                        alt="Original"
+                        className="max-w-full max-h-[calc(100vh-10rem)] object-contain ring-1 ring-border/50 shadow-xl"
                       />
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 flex flex-col items-center justify-center w-full h-full min-h-0">
                     <span className="text-[10px] uppercase tracking-widest text-primary mb-3 font-semibold">{t('app.modified')}</span>
                     <div className="relative flex items-center justify-center flex-1 w-full drop-shadow-lg">
-                      <img 
-                        src={previewUrl!} 
-                        alt="Modified" 
+                      <img
+                        src={previewUrl!}
+                        alt="Modified"
                         className="max-w-full max-h-[calc(100vh-10rem)] object-contain transition-opacity duration-200 ring-1 ring-border/50 shadow-xl"
                         style={{ opacity: isProcessing ? 0.3 : 1 }}
                       />
@@ -383,13 +383,13 @@ export default function App() {
             </div>
           )}
         </main>
-        
+
         {/* Properties Panel (Right Sidebar) */}
-        <Sidebar 
+        <Sidebar
           activeCategory={activeCategory}
-          onApplyTool={handleApplyTool} 
-          isProcessing={isProcessing} 
-          disabled={!currentBlob} 
+          onApplyTool={handleApplyTool}
+          isProcessing={isProcessing}
+          disabled={!currentBlob}
         />
       </div>
     </div>
