@@ -1,20 +1,50 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 📸 Mini Photoshop Web App
 
-# Run and deploy your AI Studio app
+Aplikasi pengolahan citra digital berbasis Web (React + FastAPI) yang dilengkapi dengan berbagai macam fitur mulai dari *Image Enhancement*, *Geometric Transformation*, *Noise Reduction*, *Image Segmentation*, *Compression*, hingga kemampuan cerdas **Object Detection** menggunakan AI (Convolutional Neural Network).
 
-This contains everything you need to run your app locally.
+Proyek ini disusun untuk memenuhi spesifikasi Tugas Mata Kuliah Pengolahan Citra Digital (Dosen Pengampu: Rizki Elisa Nalawati, S.T., M.T.).
 
-View your app in AI Studio: https://ai.studio/apps/21bcb1ee-1b49-4a7c-b1ee-e4d13a5651d5
+## ✨ Fitur Utama
+1. **Image Management:** Upload, Download, Reset gambar dengan preview Before-After ganda.
+2. **Image Enhancement:** Brightness, Contrast, Histogram Equalization, Sharpening, Smoothing.
+3. **Geometric Transformation:** Rotate, Flip, Crop, Resize, Translation.
+4. **Image Restoration:** Gaussian Blur, Median Filter (Noise Reduction).
+5. **Binary & Edge Processing:** Thresholding, Canny, Sobel, Prewitt, Robert, Laplacian, Morphology (Erosi/Dilasi).
+6. **Color Processing:** Grayscale konversi, Channel Splitting, HSV Adjustment.
+7. **Image Segmentation:** Threshold, Edge-based, K-Means Clustering.
+8. **Image Compression:** JPEG Compression Simulation & RLE/Kuantisasi.
+9. **Histogram Analysis:** Grafik interaktif distribusi warna citra secara real-time.
+10. **AI Object Detection:** Deteksi objek cerdas menggunakan arsitektur CNN kustom kebanggaan kita **YOPSBOX-TI4C** dengan dukungan algoritma *Non-Maximum Suppression (NMS)*. Mampu mendeteksi dan mengkotakkan 20 jenis objek yang berbeda (manusia, mobil, anjing, dsb) secara sangat akurat.
 
-## Run Locally
+## 🛠️ Tech Stack
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS, Lucide Icons.
+- **Backend:** Python, FastAPI, Uvicorn, OpenCV (cv2), NumPy.
+- **Machine Learning:** TensorFlow, OpenCV DNN Module.
 
-**Prerequisites:**  Node.js
+## 🚀 Cara Menjalankan Aplikasi Secara Lokal
 
+**Prasyarat Sistem:**
+- Node.js terinstall di komputer.
+- Python versi 3.10 ke atas terinstall di komputer.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+**Langkah Instalasi & Eksekusi:**
+1. Buka folder proyek `citra digital` di Terminal atau Command Prompt.
+2. Install kebutuhan modul (cukup dilakukan sekali):
+   ```bash
+   npm install
+   ```
+3. Jalankan aplikasi dengan perintah pamungkas ini:
+   ```bash
+   npm run dev
+   ```
+4. Aplikasi akan menyala otomatis!
+   - Buka **`http://localhost:3000`** di browser untuk melihat User Interface.
+   - Server Backend API berjalan tersembunyi di `http://localhost:8000`.
+
+## 📄 Lisensi
+
+Proyek ini menggunakan lisensi **MIT License**. Kamu bebas menggunakan, menyalin, memodifikasi, dan mendistribusikan kode ini untuk keperluan apapun asalkan menyantumkan kredit hak cipta (copyright) kepada pengembang aslinya.
+Lihat file [LICENSE](LICENSE) untuk detail lengkap.
+
+---
+*Developed with ❤️ by Kelas TI-4C — 2026*

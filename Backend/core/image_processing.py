@@ -4,11 +4,11 @@ import os
 import tensorflow as tf
 
 try:
-    cnn_model = tf.keras.models.load_model("models/YOPS.h5")
+    cnn_model = tf.keras.models.load_model("models/YOPS-100.TI4C")
 except:
     cnn_model = None
 
-# 1 & 2. Image Enhancement
+# 1 & 2. Peningkatan Citra (Enhancement)
 def apply_brightness_contrast(image: np.ndarray, brightness: int, contrast: int) -> np.ndarray:
     alpha = (contrast + 100) / 100.0
     beta = brightness
@@ -34,7 +34,7 @@ def apply_blur(image: np.ndarray, ftype: str) -> np.ndarray:
     else: # default average blur
         return cv2.blur(image, (5, 5))
 
-# 3. Geometric Transformation
+# 3. Transformasi Geometris (Geometric Transformation)
 def apply_rotate(image: np.ndarray, angle: float) -> np.ndarray:
     h, w = image.shape[:2]
     mtx = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1)
@@ -45,7 +45,7 @@ def apply_flip(image: np.ndarray, mode: int) -> np.ndarray:
 
 def apply_crop(image: np.ndarray, x1: int, y1: int, x2: int, y2: int) -> np.ndarray:
     h, w = image.shape[:2]
-    # boundary check
+    # Pengecekan batas (boundary check) agar tidak error saat crop di luar gambar
     x1, x2 = max(0, x1), min(w, x2)
     y1, y2 = max(0, y1), min(h, y2)
     return image[y1:y2, x1:x2]
@@ -60,7 +60,7 @@ def apply_translation(image: np.ndarray, tx: float, ty: float) -> np.ndarray:
     mtx = np.float32([[1, 0, tx], [0, 1, ty]])
     return cv2.warpAffine(image, mtx, (w, h))
 
-# 5. Binary & Edge Processing
+# 5. Pemrosesan Biner & Tepi (Binary & Edge Processing)
 def apply_threshold(image: np.ndarray, thresh_val: int = 127) -> np.ndarray:
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
     _, binary = cv2.threshold(gray, thresh_val, 255, cv2.THRESH_BINARY)
@@ -101,14 +101,14 @@ def apply_morph(image: np.ndarray, mtype: str, kernel_size: int = 5) -> np.ndarr
         return cv2.dilate(image, kernel, iterations=1)
     return image
 
-# 6. Color Processing
+# 6. Pemrosesan Warna (Color Processing)
 def apply_grayscale(image: np.ndarray) -> np.ndarray:
     if len(image.shape) == 3:
         return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return image
 
 def split_channel(image: np.ndarray, channel: int) -> np.ndarray:
-    # channel: 0=Blue, 1=Green, 2=Red
+    # Urutan matrix warna pada layer array: 0=Biru, 1=Hijau, 2=Merah
     if len(image.shape) != 3:
         return image
     b, g, r = cv2.split(image)
@@ -161,45 +161,83 @@ def simulate_quantization(image: np.ndarray, levels: int = 8) -> np.ndarray:
     factor = 256 / levels
     return np.uint8(np.floor(image / factor) * factor)
 
-# 9. Histogram Analysis
+# 9. Analisis Histogram (Histogram Analysis)
 def get_histogram_data(image: np.ndarray) -> list:
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
     hist = cv2.calcHist([gray], [0], None, [256], [0, 256])
     return [int(x[0]) for x in hist]
 
-# 11. Object Detection (CNN via ResNet50)
-def detect_objects(img, prototxt=None, model=None):
-    if cnn_model is None:
-        raise Exception("Model YOPS tidak ditemukan di models/YOPS.h5!")
+# 11. Deteksi Objek (CNN via YOPSBOX-TI4C - Bounding Box)
+def detect_objects(img):
+    prototxt = "models/YOPS-H.TI4C"
+    model = "models/YOPSBOX.TI4C"
     
-    # Preprocess gambar untuk ResNet50 (resize ke 224x224, konversi ke float)
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img_resized = cv2.resize(img_rgb, (224, 224))
-    img_array = np.expand_dims(img_resized, axis=0) # (1, 224, 224, 3)
+    if not os.path.exists(prototxt) or not os.path.exists(model):
+        raise Exception("Model YOPSBOX-TI4C tidak ditemukan di folder models/")
+
+    CLASSES = ["Background", "Pesawat", "Sepeda", "Burung", "Perahu",
+               "Botol", "Bus", "Mobil", "Kucing", "Kursi", "Sapi", "Meja Makan",
+               "Anjing", "Kuda", "Motor", "Orang", "Tanaman Hias", "Domba",
+               "Sofa", "Kereta", "Monitor TV"]
     
-    # Normalisasi khusus ResNet50
-    img_array = tf.keras.applications.resnet50.preprocess_input(img_array.astype(np.float32))
+    COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
+
+    net = cv2.dnn.readNetFromCaffe(prototxt, model)
     
-    # Prediksi menggunakan ResNet50
-    prediction = cnn_model.predict(img_array, verbose=0)
+    h, w = img.shape[:2]
+    # Ubah gambar menjadi Blob (resize paksa ke 300x300 khusus untuk arsitektur YOPSBOX-TI4C)
+    blob = cv2.dnn.blobFromImage(cv2.resize(img, (300, 300)), 0.007843, (300, 300), 127.5)
     
-    # Decode hasil prediksi ke nama kategori (Top 1)
-    decoded = tf.keras.applications.resnet50.decode_predictions(prediction, top=1)[0][0]
-    class_id, class_name, confidence = decoded
+    net.setInput(blob)
+    detections = net.forward()
     
-    # Ganti underscore dengan spasi agar lebih cantik
-    class_name = class_name.replace('_', ' ').title()
-    label = f"Prediksi: {class_name} ({confidence*100:.1f}%)"
-    
-    # Warna emas elegan
-    color = (0, 215, 255)
-        
-    # Tulis hasil prediksi di gambar dengan font yang lebih jelas
     res_img = img.copy()
     
-    # Background untuk teks agar mudah dibaca di gambar terang/gelap
-    (text_w, text_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1.0, 3)
-    cv2.rectangle(res_img, (15, 15), (25 + text_w, 55 + text_h), (0, 0, 0), -1)
+    boxes = []
+    confidences = []
+    class_ids = []
     
-    cv2.putText(res_img, label, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, color, 3)
+    # 1. Kumpulkan semua deteksi potensial
+    for i in np.arange(0, detections.shape[2]):
+        confidence = float(detections[0, 0, i, 2])
+        if confidence > 0.3: # Naikkan threshold sedikit biar gak terlalu sensitif
+            idx = int(detections[0, 0, i, 1])
+            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+            (startX, startY, endX, endY) = box.astype("int")
+            
+            startX, startY = max(0, startX), max(0, startY)
+            endX, endY = min(w - 1, endX), min(h - 1, endY)
+            
+            # Format koordinat untuk NMS harus berupa [x, y, lebar, tinggi]
+            boxes.append([startX, startY, endX - startX, endY - startY])
+            confidences.append(confidence)
+            class_ids.append(idx)
+            
+    # 2. Terapkan Non-Maximum Suppression (NMS)
+    # nms_threshold: Semakin kecil (misal 0.3), semakin keras dia menghapus box yang saling menumpuk (overlap)
+    indices = cv2.dnn.NMSBoxes(boxes, confidences, score_threshold=0.3, nms_threshold=0.4)
+    
+    # 3. Gambar HANYA box yang selamat dari NMS
+    if len(indices) > 0:
+        for i in indices.flatten():
+            (x, y, bw, bh) = boxes[i]
+            idx = class_ids[i]
+            confidence = confidences[i]
+            
+            label = f"{CLASSES[idx]}: {confidence * 100:.1f}%"
+            color = COLORS[idx]
+            
+            # Gambar Bounding Box utama
+            cv2.rectangle(res_img, (x, y), (x + bw, y + bh), color, 3)
+            
+            # Hitung posisi teks
+            ty = y - 10 if y - 10 > 10 else y + 20
+            
+            # Beri background hitam pekat pada teks agar sangat jelas dibaca
+            (text_w, text_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
+            cv2.rectangle(res_img, (x, ty - text_h - 5), (x + text_w, ty + 5), (0, 0, 0), -1)
+            
+            # Tulis label di atas background hitam
+            cv2.putText(res_img, label, (x, ty), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+            
     return res_img
