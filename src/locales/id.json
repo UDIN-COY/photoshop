@@ -1,0 +1,112 @@
+{
+  "app": {
+    "open": "Buka",
+    "undo": "Urungkan",
+    "reset": "Kembalikan ke Awal",
+    "export": "Ekspor",
+    "processing": "Memproses...",
+    "single": "Single",
+    "split": "Split",
+    "hist": "Hist",
+    "emptyState": {
+      "title": "Area Kerja Kosong",
+      "desc": "Buka berkas gambar dari perangkat Anda untuk mulai mengedit, menerapkan filter, atau menggunakan pemrosesan gambar tingkat lanjut.",
+      "btn": "Buka Gambar Baru"
+    },
+    "histogramTitle": "Histogram",
+    "histogramEmpty": "Silakan klik tombol Hist untuk memuat",
+    "original": "Asli",
+    "modified": "Dimodifikasi"
+  },
+  "sidebar": {
+    "categories": {
+      "adjust": "Penyesuaian",
+      "geometry": "Geometri",
+      "color": "Warna",
+      "filters": "Filter",
+      "restore": "Pemulihan",
+      "segment": "Segmentasi"
+    },
+    "desc": {
+      "adjust": "Kecerahan, kontras & buram",
+      "geometry": "Transformasi dan ukuran gambar",
+      "color": "Kanal dan pengaturan rona",
+      "filters": "Tepi dan morfologi",
+      "restore": "Penghilang derau dan perbaikan",
+      "segment": "Klasterisasi dan deteksi (ML)"
+    },
+    "empty": {
+      "title": "Siap Beraksi",
+      "desc": "Pilih alat dari panel kiri untuk melihat propertinya."
+    },
+    "adjust": {
+      "brightness": "Kecerahan",
+      "contrast": "Kontras",
+      "applySettings": "Terapkan Pengaturan",
+      "equalizeHist": "Ekualisasi Hist",
+      "sharpen": "Pertajam",
+      "blur": "Pengeburaman",
+      "blurAlgo": "Algoritma",
+      "gaussianBlur": "Buram Gaussian",
+      "avgBlur": "Buram Rata-rata",
+      "medianBlur": "Buram Median",
+      "applyBlur": "Terapkan Buram"
+    },
+    "geometry": {
+      "rotation": "Rotasi",
+      "rotateBtn": "Putar",
+      "flipImg": "Balikan Gambar",
+      "flipMode": "Mode",
+      "flipHorz": "Horizontal (Sumbu-Y)",
+      "flipVert": "Vertikal (Sumbu-X)",
+      "flipBoth": "Kedua Sumbu",
+      "flipBtn": "Balik",
+      "scale": "Skala",
+      "resizeBtn": "Ubah Skala",
+      "translation": "Pergeseran",
+      "translateBtn": "Geser",
+      "cropArea": "Area Potong",
+      "cropBtn": "Potong"
+    },
+    "restore": {
+      "gaussian": "Hapus Derau Gaussian",
+      "median": "Hapus Derau Median (S&P)"
+    },
+    "color": {
+      "toGray": "Konversi ke Keabuan",
+      "extractChannel": "Ekstrak Kanal",
+      "channel": "Kanal",
+      "redChannel": "Kanal Merah",
+      "greenChannel": "Kanal Hijau",
+      "blueChannel": "Kanal Biru",
+      "extractBtn": "Ekstrak",
+      "hsvAdj": "Penyesuaian HSV",
+      "hueShift": "Geser Rona (Hue)",
+      "sat": "Saturasi",
+      "applyHsv": "Terapkan HSV"
+    },
+    "filters": {
+      "threshold": "Batas Ambang (Threshold)",
+      "applyThresh": "Terapkan Threshold",
+      "edgeAlgo": "Algoritma Tepi",
+      "algo": "Algoritma",
+      "detectEdge": "Deteksi Tepi",
+      "morphology": "Morfologi",
+      "operation": "Operasi",
+      "erosion": "Erosi (Erosion)",
+      "dilation": "Dilasi (Dilation)",
+      "opening": "Opening",
+      "closing": "Closing",
+      "kernelSize": "Ukuran Kernel",
+      "applyMorph": "Terapkan Morfologi"
+    },
+    "segment": {
+      "kmeans": "Klasterisasi K-Means",
+      "kCount": "K (Jumlah Klaster)",
+      "applyKmeans": "Terapkan K-Means",
+      "otherMethods": "Metode Lainnya",
+      "edgeBased": "Tepi (Edge-Based)",
+      "detectCnn": "Deteksi Objek CNN"
+    }
+  }
+}

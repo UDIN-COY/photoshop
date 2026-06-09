@@ -1,0 +1,112 @@
+{
+  "app": {
+    "open": "Open",
+    "undo": "Undo",
+    "reset": "Reset to Original",
+    "export": "Export",
+    "processing": "Processing...",
+    "single": "Single",
+    "split": "Split",
+    "hist": "Hist",
+    "emptyState": {
+      "title": "Empty Workspace",
+      "desc": "Open an image file from your device to start editing, applying filters, or using advanced image processing.",
+      "btn": "Open New Image"
+    },
+    "histogramTitle": "Histogram",
+    "histogramEmpty": "Please click the Hist button to load",
+    "original": "Original",
+    "modified": "Modified"
+  },
+  "sidebar": {
+    "categories": {
+      "adjust": "Adjustments",
+      "geometry": "Geometry",
+      "color": "Color",
+      "filters": "Filters",
+      "restore": "Restore",
+      "segment": "Segmentation"
+    },
+    "desc": {
+      "adjust": "Brightness, contrast & blur",
+      "geometry": "Transform and image size",
+      "color": "Channel and hue settings",
+      "filters": "Edges and morphology",
+      "restore": "Denoise and repair",
+      "segment": "Clustering and detection (ML)"
+    },
+    "empty": {
+      "title": "Ready to Roll",
+      "desc": "Select a tool from the left panel to see its properties."
+    },
+    "adjust": {
+      "brightness": "Brightness",
+      "contrast": "Contrast",
+      "applySettings": "Apply Settings",
+      "equalizeHist": "Equalize Hist",
+      "sharpen": "Sharpen",
+      "blur": "Blurring",
+      "blurAlgo": "Algorithm",
+      "gaussianBlur": "Gaussian Blur",
+      "avgBlur": "Average Blur",
+      "medianBlur": "Median Blur",
+      "applyBlur": "Apply Blur"
+    },
+    "geometry": {
+      "rotation": "Rotation",
+      "rotateBtn": "Rotate",
+      "flipImg": "Flip Image",
+      "flipMode": "Mode",
+      "flipHorz": "Horizontal (Y-Axis)",
+      "flipVert": "Vertical (X-Axis)",
+      "flipBoth": "Both Axes",
+      "flipBtn": "Flip",
+      "scale": "Scale",
+      "resizeBtn": "Resize",
+      "translation": "Translation",
+      "translateBtn": "Translate",
+      "cropArea": "Crop Area",
+      "cropBtn": "Crop"
+    },
+    "restore": {
+      "gaussian": "Gaussian Denoise",
+      "median": "Median Denoise (S&P)"
+    },
+    "color": {
+      "toGray": "Convert to Grayscale",
+      "extractChannel": "Extract Channel",
+      "channel": "Channel",
+      "redChannel": "Red Channel",
+      "greenChannel": "Green Channel",
+      "blueChannel": "Blue Channel",
+      "extractBtn": "Extract",
+      "hsvAdj": "HSV Adjustment",
+      "hueShift": "Hue Shift",
+      "sat": "Saturation",
+      "applyHsv": "Apply HSV"
+    },
+    "filters": {
+      "threshold": "Threshold Value",
+      "applyThresh": "Apply Threshold",
+      "edgeAlgo": "Edge Algorithm",
+      "algo": "Algorithm",
+      "detectEdge": "Detect Edge",
+      "morphology": "Morphology",
+      "operation": "Operation",
+      "erosion": "Erosion",
+      "dilation": "Dilation",
+      "opening": "Opening",
+      "closing": "Closing",
+      "kernelSize": "Kernel Size",
+      "applyMorph": "Apply Morphology"
+    },
+    "segment": {
+      "kmeans": "K-Means Clustering",
+      "kCount": "K (Cluster Count)",
+      "applyKmeans": "Apply K-Means",
+      "otherMethods": "Other Methods",
+      "edgeBased": "Edge-Based",
+      "detectCnn": "CNN Object Detection"
+    }
+  }
+}

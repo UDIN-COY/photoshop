@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Upload, Download, Undo2, RotateCcw, AlertTriangle, Moon, Sun, 
-  SplitSquareHorizontal, Image as ImageIcon, BarChart, SlidersHorizontal, Move, Palette, Wand2, RefreshCw, Layers
+  SplitSquareHorizontal, Image as ImageIcon, BarChart, SlidersHorizontal, Move, Palette, Wand2, RefreshCw, Layers, Globe
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +10,8 @@ import { processImage, fetchHistogramData } from './lib/api';
 import { useTheme } from './components/theme-provider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ResponsiveContainer, BarChart as RechartsBarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid } from 'recharts';
+import { useTranslation } from 'react-i18next';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 function ModeToggle() {
   const { theme, setTheme } = useTheme();
@@ -28,7 +30,32 @@ function ModeToggle() {
   );
 }
 
+function LanguageToggle() {
+  const { i18n } = useTranslation();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-md hover:bg-muted">
+          <Globe className="h-4 w-4" />
+          <span className="sr-only">Toggle language</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => i18n.changeLanguage('id')} className={i18n.language === 'id' ? 'font-bold' : ''}>
+          Bahasa Indonesia
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => i18n.changeLanguage('en')} className={i18n.language === 'en' ? 'font-bold' : ''}>
+          English
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export default function App() {
+  const { t } = useTranslation();
+  
   const [originalBlob, setOriginalBlob] = useState<Blob | null>(null);
   const [currentBlob, setCurrentBlob] = useState<Blob | null>(null);
   
@@ -72,7 +99,7 @@ export default function App() {
       setCurrentBlob(file);
       setHistory([]);
       setError(null);
-      setActiveCategory('adjust'); // Default to adjust when file opened
+      setActiveCategory('adjust'); 
     }
   };
 
@@ -138,12 +165,12 @@ export default function App() {
   };
 
   const categories = [
-    { id: 'adjust', icon: SlidersHorizontal, label: 'Adjustments' },
-    { id: 'geometry', icon: Move, label: 'Geometry' },
-    { id: 'color', icon: Palette, label: 'Color' },
-    { id: 'filters', icon: Wand2, label: 'Filters' },
-    { id: 'restore', icon: RefreshCw, label: 'Restore' },
-    { id: 'segment', icon: Layers, label: 'Segmentation' },
+    { id: 'adjust', icon: SlidersHorizontal, label: t('sidebar.categories.adjust') },
+    { id: 'geometry', icon: Move, label: t('sidebar.categories.geometry') },
+    { id: 'color', icon: Palette, label: t('sidebar.categories.color') },
+    { id: 'filters', icon: Wand2, label: t('sidebar.categories.filters') },
+    { id: 'restore', icon: RefreshCw, label: t('sidebar.categories.restore') },
+    { id: 'segment', icon: Layers, label: t('sidebar.categories.segment') },
   ] as const;
 
   return (
@@ -169,9 +196,9 @@ export default function App() {
            {currentBlob && (
              <Tabs value={viewMode} onValueChange={setViewMode} className="w-[300px]">
                 <TabsList className="grid w-full grid-cols-3 h-8">
-                  <TabsTrigger value="single" className="text-xs h-6"><ImageIcon className="w-3 h-3 mr-2" />Single</TabsTrigger>
-                  <TabsTrigger value="split" className="text-xs h-6"><SplitSquareHorizontal className="w-3 h-3 mr-2" />Split</TabsTrigger>
-                  <TabsTrigger value="histogram" className="text-xs h-6" onClick={() => executeAction('histogram')}><BarChart className="w-3 h-3 mr-2" />Hist</TabsTrigger>
+                  <TabsTrigger value="single" className="text-xs h-6"><ImageIcon className="w-3 h-3 mr-2" />{t('app.single')}</TabsTrigger>
+                  <TabsTrigger value="split" className="text-xs h-6"><SplitSquareHorizontal className="w-3 h-3 mr-2" />{t('app.split')}</TabsTrigger>
+                  <TabsTrigger value="histogram" className="text-xs h-6" onClick={() => executeAction('histogram')}><BarChart className="w-3 h-3 mr-2" />{t('app.hist')}</TabsTrigger>
                 </TabsList>
              </Tabs>
            )}
@@ -186,7 +213,7 @@ export default function App() {
             className="hidden" 
           />
           <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="h-8 text-xs font-medium bg-background">
-            <Upload className="w-3.5 h-3.5 mr-1.5" /> Buka
+            <Upload className="w-3.5 h-3.5 mr-1.5" /> {t('app.open')}
           </Button>
           
           <div className="w-px h-4 bg-border/60 mx-1.5" />
@@ -198,7 +225,7 @@ export default function App() {
                   <Undo2 className="w-3.5 h-3.5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">Urungkan</TooltipContent>
+              <TooltipContent side="bottom" className="text-xs">{t('app.undo')}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -206,17 +233,18 @@ export default function App() {
                   <RotateCcw className="w-3.5 h-3.5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">Kembalikan ke Awal</TooltipContent>
+              <TooltipContent side="bottom" className="text-xs">{t('app.reset')}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 
           <div className="w-px h-4 bg-border/60 mx-1.5" />
           
           <Button variant="default" size="sm" onClick={download} disabled={!currentBlob || isProcessing} className="h-8 text-xs font-medium rounded-lg shadow-sm">
-            <Download className="w-3.5 h-3.5 mr-1.5" /> Ekspor
+            <Download className="w-3.5 h-3.5 mr-1.5" /> {t('app.export')}
           </Button>
           
-          <div className="ml-1">
+          <div className="ml-1 flex items-center">
+            <LanguageToggle />
             <ModeToggle />
           </div>
         </div>
@@ -237,7 +265,7 @@ export default function App() {
                       variant={isActive ? "default" : "ghost"}
                       size="icon"
                       className={`h-11 w-11 rounded-xl transition-all ${isActive ? 'shadow-sm' : 'text-muted-foreground hover:bg-muted/70'}`}
-                      onClick={() => setActiveCategory(c.id)}
+                      onClick={() => setActiveCategory(c.id as ToolCategory)}
                       disabled={!currentBlob}
                     >
                       <Icon className="w-4 h-4" />
@@ -272,12 +300,12 @@ export default function App() {
                 <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 text-primary shadow-sm border border-primary/20">
                   <ImageIcon className="w-8 h-8 opacity-90" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-2xl text-foreground font-semibold tracking-tight mb-2 font-heading">Area Kerja Kosong</h3>
+                <h3 className="text-2xl text-foreground font-semibold tracking-tight mb-2 font-heading">{t('app.emptyState.title')}</h3>
                 <p className="text-sm text-center mb-8 max-w-sm text-muted-foreground leading-relaxed">
-                  Buka berkas gambar dari perangkat Anda untuk mulai mengedit, menerapkan filter, atau menggunakan pemrosesan gambar tingkat lanjut.
+                  {t('app.emptyState.desc')}
                 </p>
                 <Button size="lg" className="shadow-md rounded-xl h-11 px-8 font-medium transition-all hover:scale-[1.02]" onClick={() => fileInputRef.current?.click()}>
-                  <Upload className="w-4 h-4 mr-2" /> Buka Gambar Baru
+                  <Upload className="w-4 h-4 mr-2" /> {t('app.emptyState.btn')}
                 </Button>
               </div>
             </div>
@@ -287,14 +315,14 @@ export default function App() {
                 <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-20 flex items-center justify-center">
                   <div className="bg-card px-4 py-3 rounded-md shadow-lg flex items-center gap-3 border">
                     <RefreshCw className="w-4 h-4 animate-spin text-primary" />
-                    <span className="font-medium text-sm">Memproses...</span>
+                    <span className="font-medium text-sm">{t('app.processing')}</span>
                   </div>
                 </div>
               )}
               
               {viewMode === 'histogram' ? (
                 <div className="w-full h-full flex flex-col items-center justify-center bg-transparent p-4">
-                  <span className="text-[10px] uppercase tracking-widest text-primary mb-6 font-semibold">Histogram</span>
+                  <span className="text-[10px] uppercase tracking-widest text-primary mb-6 font-semibold">{t('app.histogramTitle')}</span>
                   {histogramData ? (
                     <div className="w-full max-w-4xl h-96 bg-card/50 p-6 rounded-xl border shadow-sm">
                       <ResponsiveContainer width="100%" height="100%">
@@ -312,7 +340,7 @@ export default function App() {
                     </div>
                   ) : (
                     <div className="text-muted-foreground text-sm flex items-center">
-                      <BarChart className="w-4 h-4 mr-2" /> Silakan klik tombol Hist untuk memuat
+                      <BarChart className="w-4 h-4 mr-2" /> {t('app.histogramEmpty')}
                     </div>
                   )}
                 </div>
@@ -320,7 +348,7 @@ export default function App() {
                 <div className="relative max-w-full max-h-full flex items-center justify-center bg-transparent drop-shadow-xl">
                   <img 
                     src={previewUrl!} 
-                    alt="Area kerja kanvas" 
+                    alt="Canvas" 
                     className="max-w-full max-h-[calc(100vh-8rem)] object-contain transition-opacity duration-200 shadow-xl ring-1 ring-border/50" 
                     style={{ opacity: isProcessing ? 0.3 : 1 }}
                   />
@@ -328,22 +356,22 @@ export default function App() {
               ) : (
                 <div className="w-full h-full flex flex-col md:flex-row items-center gap-8 p-4">
                   <div className="flex-1 flex flex-col items-center justify-center w-full h-full min-h-0">
-                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-semibold">Asli</span>
+                    <span className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-semibold">{t('app.original')}</span>
                     <div className="relative flex items-center justify-center flex-1 w-full drop-shadow-lg">
                       <img 
                         src={originalUrl!} 
-                        alt="Asli" 
+                        alt="Original" 
                         className="max-w-full max-h-[calc(100vh-10rem)] object-contain ring-1 ring-border/50 shadow-xl" 
                       />
                     </div>
                   </div>
                   
                   <div className="flex-1 flex flex-col items-center justify-center w-full h-full min-h-0">
-                    <span className="text-[10px] uppercase tracking-widest text-primary mb-3 font-semibold">Dimodifikasi</span>
+                    <span className="text-[10px] uppercase tracking-widest text-primary mb-3 font-semibold">{t('app.modified')}</span>
                     <div className="relative flex items-center justify-center flex-1 w-full drop-shadow-lg">
                       <img 
                         src={previewUrl!} 
-                        alt="Dimodifikasi" 
+                        alt="Modified" 
                         className="max-w-full max-h-[calc(100vh-10rem)] object-contain transition-opacity duration-200 ring-1 ring-border/50 shadow-xl"
                         style={{ opacity: isProcessing ? 0.3 : 1 }}
                       />
