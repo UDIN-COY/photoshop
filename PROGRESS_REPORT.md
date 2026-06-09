@@ -9,17 +9,30 @@
 
 ## 🏗️ Arsitektur Proyek
 
-```
-Mini_Photoshop/
-├── Mini_Photoshop.py              # Entry point + class utama (28 baris)
-├── image_ops.py                   # Semua logika pemrosesan citra (414 baris)
-├── ui_layout.py                   # Desain UI & layout Tkinter (451 baris)
-└── MobileNetSSD_deploy.prototxt   # Model CNN MobileNet SSD (29 KB)
+```text
+citra digital/
+├── Backend/
+│   ├── core/
+│   │   ├── image_processing.py (Logika algoritma & CNN Inference)
+│   ├── models/
+│   │   ├── YOPS.h5 (Model pre-trained 1000 kelas)
+│   ├── venv/
+│   ├── main.py (FastAPI Routing)
+│   ├── requirements.txt
+│   ├── run_api.sh
+│   ├── run_ngrok.sh
+│   └── download_resnet.py
+├── src/ (Frontend React)
+├── package.json
+└── vite.config.ts
 ```
 
-**Pola desain:** *Mixin pattern* — `MiniPhotoshop` mewarisi `ImageOpsMixin` dan `UiLayoutMixin`, memisahkan logika bisnis dari UI secara bersih.
+## Update Terakhir
+1. **Refactoring Monorepo:** Memisahkan kode Backend dan Frontend ke dalam foldernya masing-masing agar struktur kode menjadi bersih.
+2. **Upgrade Machine Learning:** Mengganti CNN custom `YOPS.h5` dengan arsitektur **ResNet50** yang memiliki bobot pre-trained `ImageNet`. Ini meningkatkan kemampuan deteksi objek dari 10 kategori menjadi **1000 kategori**, sehingga model dapat mengenali objek yang kompleks (termasuk manusia, pakaian, perlengkapan, dll).
+3. **Frontend Integration:** Frontend React dikonfigurasi untuk langsung memanggil `http://localhost:8000` alih-alih melalui URL *ngrok* untuk stabilitas koneksi lokal.
 
-**Stack teknologi:** Python · OpenCV · NumPy · Pillow · Tkinter · Matplotlib
+**Stack teknologi:** Python · FastAPI · OpenCV · NumPy · TensorFlow / tf-nightly
 
 ---
 
