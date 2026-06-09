@@ -1,50 +1,50 @@
 # 📸 Mini Photoshop Web App
 
-Aplikasi pengolahan citra digital berbasis Web (React + FastAPI) yang dilengkapi dengan berbagai macam fitur mulai dari *Image Enhancement*, *Geometric Transformation*, *Noise Reduction*, *Image Segmentation*, *Compression*, hingga kemampuan cerdas **Object Detection** menggunakan AI (Convolutional Neural Network).
+A web-based digital image processing application (React + FastAPI) equipped with various features ranging from *Image Enhancement*, *Geometric Transformation*, *Noise Reduction*, *Image Segmentation*, *Compression*, to smart **Object Detection** capabilities using AI (Convolutional Neural Network).
 
-Proyek ini disusun untuk memenuhi spesifikasi Tugas Mata Kuliah Pengolahan Citra Digital (Dosen Pengampu: Rizki Elisa Nalawati, S.T., M.T.).
+This project was developed to fulfill the specifications of the Digital Image Processing Course (Instructor: Rizki Elisa Nalawati, S.T., M.T.).
 
-## ✨ Fitur Utama
-1. **Image Management:** Upload, Download, Reset gambar dengan preview Before-After ganda.
-2. **Image Enhancement:** Brightness, Contrast, Histogram Equalization, Sharpening, Smoothing.
-3. **Geometric Transformation:** Rotate, Flip, Crop, Resize, Translation.
-4. **Image Restoration:** Gaussian Blur, Median Filter (Noise Reduction).
-5. **Binary & Edge Processing:** Thresholding, Canny, Sobel, Prewitt, Robert, Laplacian, Morphology (Erosi/Dilasi).
-6. **Color Processing:** Grayscale konversi, Channel Splitting, HSV Adjustment.
-7. **Image Segmentation:** Threshold, Edge-based, K-Means Clustering.
-8. **Image Compression:** JPEG Compression Simulation & RLE/Kuantisasi.
-9. **Histogram Analysis:** Grafik interaktif distribusi warna citra secara real-time.
-10. **AI Object Detection:** Deteksi objek cerdas menggunakan arsitektur CNN kustom kebanggaan kita **YOPSBOX-TI4C** dengan dukungan algoritma *Non-Maximum Suppression (NMS)*. Mampu mendeteksi dan mengkotakkan 20 jenis objek yang berbeda (manusia, mobil, anjing, dsb) secara sangat akurat.
+## ✨ Key Features
+1. **Image Management:** Upload, Download, and Reset images with a dual Before-After preview.
+2. **Image Enhancement:** Brightness, Contrast, Histogram Equalization, Sharpening, and Smoothing.
+3. **Geometric Transformation:** Rotate, Flip, Crop, Resize, and Translation.
+4. **Image Restoration:** Gaussian Blur and Median Filter (Noise Reduction).
+5. **Binary & Edge Processing:** Thresholding, Canny, Sobel, Prewitt, Robert, Laplacian, and Morphology (Erosion/Dilation).
+6. **Color Processing:** Grayscale conversion, Channel Splitting, and HSV Adjustment.
+7. **Image Segmentation:** Threshold-based, Edge-based, and K-Means Clustering.
+8. **Image Compression:** JPEG Compression Simulation & RLE/Quantization.
+9. **Histogram Analysis:** Interactive and real-time image color distribution graphs.
+10. **AI Object Detection:** Smart object detection using our custom CNN architecture **YOPSBOX-TI4C** backed by the *Non-Maximum Suppression (NMS)* algorithm. Accurately detects and draws bounding boxes around 20 different object categories (people, cars, animals, etc.).
 
 ## 🛠️ Tech Stack
 - **Frontend:** React, TypeScript, Vite, Tailwind CSS, Lucide Icons.
 - **Backend:** Python, FastAPI, Uvicorn, OpenCV (cv2), NumPy.
 - **Machine Learning:** TensorFlow, OpenCV DNN Module.
 
-## 🚀 Cara Menjalankan Aplikasi Secara Lokal
+## 🚀 How to Run Locally
 
-**Prasyarat Sistem:**
-- Node.js terinstall di komputer.
-- Python versi 3.10 ke atas terinstall di komputer.
+**System Requirements:**
+- Node.js installed on your machine.
+- Python 3.10 or higher installed on your machine.
 
-**Langkah Instalasi & Eksekusi:**
-1. Buka folder proyek `citra digital` di Terminal atau Command Prompt.
-2. Install kebutuhan modul (cukup dilakukan sekali):
+**Installation & Execution Steps:**
+1. Open the `citra digital` project folder in your Terminal or Command Prompt.
+2. Install the required modules (only needed once):
    ```bash
    npm install
    ```
-3. Jalankan aplikasi dengan perintah pamungkas ini:
+3. Run the application using this ultimate command:
    ```bash
    npm run dev
    ```
-4. Aplikasi akan menyala otomatis!
-   - Buka **`http://localhost:3000`** di browser untuk melihat User Interface.
-   - Server Backend API berjalan tersembunyi di `http://localhost:8000`.
+4. The application will start automatically!
+   - Open **`http://localhost:3000`** in your browser to view the User Interface.
+   - The Backend API server runs silently at `http://localhost:8000`.
 
-## 📄 Lisensi
+## 📄 License
 
-Proyek ini menggunakan lisensi **MIT License**. Kamu bebas menggunakan, menyalin, memodifikasi, dan mendistribusikan kode ini untuk keperluan apapun asalkan menyantumkan kredit hak cipta (copyright) kepada pengembang aslinya.
-Lihat file [LICENSE](LICENSE) untuk detail lengkap.
+This project is licensed under the **MIT License**. You are free to use, copy, modify, and distribute this code for any purpose, provided that you include the original copyright credit to the developers.
+See the [LICENSE](LICENSE) file for full details.
 
 ---
-*Developed with ❤️ by Kelas TI-4C — 2026*
+*Developed with ❤️ by Class TI-4C — 2026*
